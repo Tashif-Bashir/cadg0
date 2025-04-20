@@ -31,7 +31,12 @@ def parse_cpp_file(file_path):
     """Parses a single C++ file and extracts relevant user-defined structures."""
     index = clang.cindex.Index.create()
     args = ['-std=c++11', '-I/usr/include', '-I/usr/local/include']  # Compiler args
-    translation_unit = index.parse(file_path, args=args)
+
+    try:
+        translation_unit = index.parse(file_path, args=args)
+    except clang.cindex.TranslationUnitLoadError:
+        print(f"Error parsing file: {file_path}")
+        return []  # Return an empty list for problematic files
 
     parsed_data = []
     for node in translation_unit.cursor.walk_preorder():
@@ -58,6 +63,6 @@ def parse_cpp_folder(folder_path):
     return all_parsed_data
 
 if __name__ == "__main__":
-    folder_path = "path/to/your/folder"  # Replace with the folder path
+    folder_path = "/home/t-bashir/acts-main/Core/src"  # Replace with the folder path
     result = parse_cpp_folder(folder_path)
     print(result)
