@@ -15,8 +15,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.http import JsonResponse
+
+# Simple homepage view
+def home(request):
+    return JsonResponse({"message": "Welcome to the CADG API!"})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',
+        home,
+        name='home'
+    ),
+    path('parsing/', include('parsing.urls')),
+    path('diagram/', include('diagram.urls')),
+    path('users/', include('users.urls')),
 ]
+
